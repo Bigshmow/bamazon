@@ -1,7 +1,3 @@
-// Once the customer has placed the order, your application should check if your store has enough of the product to meet the customer's request.
-
-// If not, the app should log a phrase like Insufficient quantity!, and then prevent the order from going through.
-
 // However, if your store does have enough of the product, you should fulfill the customer's order.
 
 // This means updating the SQL database to reflect the remaining quantity.
@@ -46,8 +42,18 @@ connection.connect(function(err) {
             ])
             .then(function(inquirerResponse) {
                 if (inquirerResponse.quantity <= res[parseInt(inquirerResponse.item_ID) - 1].stock_quantity){
-                    console.log("\nWe will get " + inquirerResponse.quantity +" "+ res[parseInt(inquirerResponse.item_ID) - 1].product_name + " ready for you now!");
-                    // use UPDATE and SET to change stock_quantity
+                    var newQuantity = res[parseInt(inquirerResponse.item_ID) - 1].stock_quantity - inquirerResponse.quantity;
+                    var product = res[parseInt(inquirerResponse.item_ID) - 1].product_name;
+                    var changeQuantity = "UPDATE products_tb SET stock_quantity = " + newQuantity + " WHERE product_name = " + "'" + product + "'";
+                    connection.query(changeQuantity, function (err, result) {
+                        if (err){
+                            console.error('error connecting: ' + err.stack);
+                            return;
+                        }else{
+                            console.log("\nWe will get " + inquirerResponse.quantity +" "+ res[parseInt(inquirerResponse.item_ID) - 1].product_name + " ready for you now!");
+                        }
+                      });
+
                     connection.end();
                 }else{
                     console.log("Sorry but we don't have enough stock to fill your request.")
