@@ -50,7 +50,9 @@ connection.connect(function(err) {
                             console.error('error connecting: ' + err.stack);
                             return;
                         }else{
+                            totalPrice = res[parseInt(inquirerResponse.item_ID) - 1].price * inquirerResponse.quantity;
                             console.log("\nWe will get " + inquirerResponse.quantity +" "+ res[parseInt(inquirerResponse.item_ID) - 1].product_name + " ready for you now!");
+                            console.log("That will be: " + totalPrice)
                         }
                       });
 
