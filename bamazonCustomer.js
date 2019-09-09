@@ -28,7 +28,7 @@ connection.connect(function(err) {
                 return;
             }
             for (let i = 0; i < res.length; i++) {
-                console.log("ID: "+res[i].item_id + ", " + res[i].product_name + ".  Quantity: " + res[i].stock_quantity);
+                console.log("ID: "+res[i].item_id + ", " + res[i].product_name + " for " + res[i].price + ".  Quantity: " + res[i].stock_quantity);
             }
             
             inquirer
@@ -45,8 +45,8 @@ connection.connect(function(err) {
                 },
             ])
             .then(function(inquirerResponse) {
-                if (inquirerResponse.quantity <= res[inquirerResponse.item_ID].stock_quantity){
-                    console.log("\nWe will get " + inquirerResponse.quantity + " of ID: " + inquirerResponse.item_ID + " ready for you now!");
+                if (inquirerResponse.quantity <= res[parseInt(inquirerResponse.item_ID) - 1].stock_quantity){
+                    console.log("\nWe will get " + inquirerResponse.quantity +" "+ res[parseInt(inquirerResponse.item_ID) - 1].product_name + " ready for you now!");
                     // use UPDATE and SET to change stock_quantity
                     connection.end();
                 }else{
