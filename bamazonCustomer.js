@@ -19,7 +19,7 @@ connection.connect(function(err) {
                 return;
             }
             for (let i = 0; i < res.length; i++) {
-                console.log("ID: "+res[i].item_id + ", " + res[i].product_name + " for " + res[i].price + ".  Quantity: " + res[i].stock_quantity);
+                console.log("ID: "+res[i].item_id + ", " + res[i].product_name + " for $" + res[i].price + ".  Quantity: " + res[i].stock_quantity);
             }
             
             inquirer

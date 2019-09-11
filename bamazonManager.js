@@ -55,13 +55,19 @@ connection.connect(function(err) {
                 })
             }
     function viewProducts(){
-        // If a manager selects View Products for Sale, the app should list every available item: the item IDs, names, prices, and quantities.
         console.log("Viewing Products");
+        for (let i = 0; i < res.length; i++) {
+            console.log("ID: "+res[i].item_id + ", Product: " + res[i].product_name + ", Price: $" + res[i].price + ", Quantity: " + res[i].stock_quantity);
+        }
         connection.end();
     }
     function viewLowinventory(){
-        // If a manager selects View Low Inventory, then it should list all items with an inventory count lower than five.
         console.log("Viewing Low Inventory");
+        for (let i = 0; i < res.length; i++) {
+            if (res[i].stock_quantity < 5){
+                console.log("ID: "+res[i].item_id + ", Product: " + res[i].product_name + ", Price: $" + res[i].price + ", Quantity: " + res[i].stock_quantity);
+            }
+        }
         connection.end();
     }
     function addInventory(){
