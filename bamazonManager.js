@@ -73,7 +73,6 @@ connection.connect(function (err) {
             }
 
             function addInventory() {
-                // If a manager selects Add to Inventory, your app should display a prompt that will let the manager "add more" of any item currently in the store.
                 var productArr = [];
                 for (let i = 0; i < res.length; i++) {
                     var products = "ID " + res[i].item_id + " : " + res[i].product_name;
@@ -96,14 +95,14 @@ connection.connect(function (err) {
                         var product = res[parseInt(inqRes.productSelect) - 1].product_name;
                         var increase = inqRes.productInc;
                         var newQuantity = parseInt(increase) + res[parseInt(inqRes.productSelect) - 1].stock_quantity;
-                        console.log("You've selected ID: " + inqRes.productSelect + ", " + product + " be increased by: "+ increase);
+                        console.log("You've selected ID: " + inqRes.productSelect + ", " + product + " be increased by: " + increase);
                         inquirer
                             .prompt([{
                                 type: "confirm",
                                 message: "Is this correct?",
                                 name: "addAnswer"
                             }])
-                            .then(function(inqRes) {
+                            .then(function (inqRes) {
 
                                 if (inqRes.addAnswer) {
                                     var changeQuantity = "UPDATE products_tb SET stock_quantity = " + newQuantity + " WHERE product_name = " + "'" + product + "'";
@@ -111,21 +110,33 @@ connection.connect(function (err) {
                                         if (err) {
                                             console.error('error connecting: ' + err.stack);
                                             connection.end();
-                                            return; 
+                                            return;
                                         } else {
 
-                                            console.log("confirmed, we've added " + increase + " "+ product + " to the inventory.");
+                                            console.log("confirmed, we've added " + increase + " " + product + " to the inventory.");
                                             connection.end();
                                         }
                                     });
 
-                                    
+
                                 } else {
                                     console.log("Ok, let's start over.");
-                                    connection.end();
+                                    inquirer
+                                        .prompt([{
+                                            type: "confirm",
+                                            message: "Would you like to add to the inventory still?",
+                                            name: "open"
+                                        }])
+                                        .then(function (inqRestart) {
+                                            if (inqRestart.open) {
+                                                addInventory();
+                                            } else {
+                                                connection.end();
+                                            }
+                                        })
                                 }
                             })
-                        
+
                     })
             }
 
