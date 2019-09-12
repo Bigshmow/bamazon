@@ -166,7 +166,7 @@ connection.connect(function (err) {
                     ]).then(function (inqRes) {
                         var product = "'" + inqRes.productName.toString() + "'";
                         var department = "'" + inqRes.departmentName.toString() + "'";
-                        var price = parseInt(inqRes.retailPrice);
+                        var price = parseFloat(inqRes.retailPrice);
                         var stock = parseInt(inqRes.initialStock);
                         var insertInto = "INSERT INTO products_tb(product_name,department_name,price,stock_quantity) VALUES (" +
                             product + "," +
