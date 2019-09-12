@@ -141,9 +141,75 @@ connection.connect(function (err) {
             }
 
             function addProduct() {
-                // If a manager selects Add New Product, it should allow the manager to add a completely new product to the store.
-                console.log("Adding product");
-                connection.end();
+                console.log("Follow the prompts to add new products.");
+                inquirer
+                    .prompt([{
+                            type: "input",
+                            message: "Enter new product name",
+                            name: "productName"
+                        },
+                        {
+                            type: "input",
+                            message: "Enter department name",
+                            name: "departmentName"
+                        },
+                        {
+                            type: "input",
+                            message: "Enter retail price",
+                            name: "retailPrice"
+                        },
+                        {
+                            type: "input",
+                            message: "Enter initial stock quantity",
+                            name: "initialStock"
+                        }
+                    ]).then(function (inqRes) {
+                        var product = "'" + inqRes.productName.toString() + "'";
+                        var department = "'" + inqRes.departmentName.toString() + "'";
+                        var price = parseInt(inqRes.retailPrice);
+                        var stock = parseInt(inqRes.initialStock);
+                        var insertInto = "INSERT INTO products_tb(product_name,department_name,price,stock_quantity) VALUES (" +
+                            product + "," +
+                            department + "," +
+                            price + "," +
+                            stock + ")";
+
+                        inquirer
+                            .prompt([{
+                                type: "confirm",
+                                message: "We're adding " + stock + " " + product + " to the " + department + " department at $" + price + ".  Is this correct?",
+                                name: "adding"
+                            }])
+                            .then(function (inqRes) {
+                                if (inqRes.adding) {
+                                    connection.query(insertInto, function (err, result) {
+                                        if (err) {
+                                            console.log("error connecting: " + err.stack);
+                                            return;
+                                        } else {
+                                            console.log("Great, we'll add that to the inventory now.")
+                                            connection.end();
+                                        }
+                                    })
+                                } else {
+                                    console.log("Ok, let's start over.");
+                                    inquirer
+                                        .prompt([{
+                                            type: "confirm",
+                                            message: "Would you still like to add a product?",
+                                            name: "open"
+                                        }])
+                                        .then(function (inqRestart) {
+                                            if (inqRestart.open) {
+                                                addProduct();
+                                            } else {
+                                                connection.end();
+                                            }
+                                        })
+                                }
+                            })
+                    })
+                // connection.end();
             }
         })
 })

@@ -32,7 +32,7 @@ connection.connect(function (err) {
                         type: "input",
                         message: "How many units of this product would you like?",
                         name: "quantity"
-                    },
+                    }
                 ])
                 .then(function (inquirerResponse) {
                     if (inquirerResponse.quantity <= res[parseInt(inquirerResponse.item_ID) - 1].stock_quantity) {
